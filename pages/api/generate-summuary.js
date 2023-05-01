@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
   const apiKey = req.body.apiKey
     ? req.body.apiKey
-    : "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";
+    : "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";
   const configuration = new Configuration({ apiKey });
   const openai = new OpenAIApi(configuration);
 
