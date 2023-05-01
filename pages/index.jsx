@@ -1,21 +1,22 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 export default function Home() {
-  const [loading, setLoading] = useState(false)
-  const [query, setQuery] = useState('')
-  const [summaries, setSummaries] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState("");
+  const [summaries, setSummaries] = useState([]);
+  const [apiKey, setApiKey] = useState("");
 
   const submitHandle = (e) => {
-    e.preventDefault()
-    setLoading(true)
-    fetch('/api/generate-summuary', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
+    e.preventDefault();
+    setLoading(true);
+    fetch("/api/proxy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, apiKey }),
     })
       .then((res) => res.json())
       .then((res) => {
-        setLoading(false)
+        setLoading(false);
         setSummaries([
           ...summaries,
           {
@@ -24,30 +25,30 @@ export default function Home() {
             summary: res.summary,
             originalText: query,
           },
-        ])
-        setQuery('')
-        document.getElementById('input-textarea').style.height = 'auto'
+        ]);
+        setQuery("");
+        document.getElementById("input-textarea").style.height = "auto";
         if (loading) {
-          document.getElementById('input-textarea').style.height = '225px'
+          document.getElementById("input-textarea").style.height = "225px";
         }
       })
-      .catch((err) => console.log(err))
-    setQuery('')
-  }
+      .catch((err) => console.log(err));
+    setQuery("");
+  };
 
   const handleTextAreaChange = (e) => {
-    setQuery(e.target.value)
-    e.target.style.height = 'auto'
-    e.target.style.height = e.target.scrollHeight + 'px'
-  }
+    setQuery(e.target.value);
+    e.target.style.height = "auto";
+    e.target.style.height = e.target.scrollHeight + "px";
+  };
 
   const handleClearSummaries = () => {
-    setSummaries([])
-  }
+    setSummaries([]);
+  };
 
   const handleRemoveSummary = (indexToRemove) => {
-    setSummaries(summaries.filter((_, index) => index !== indexToRemove))
-  }
+    setSummaries(summaries.filter((_, index) => index !== indexToRemove));
+  };
 
   return (
     <div className="container mx-auto my-6">
@@ -60,7 +61,8 @@ export default function Home() {
             </span>
           </h6>
           <p className="text-base font-medium text-zinc-600 mt-2">
-            Girdiğiniz metni özetleyen güzel bir araç!
+            Girdiğiniz metni özetleyen bir araç. Developed By Tunahan
+            (Jagshem#1948)
           </p>
         </div>
       </header>
@@ -68,18 +70,24 @@ export default function Home() {
         onSubmit={submitHandle}
         className="flex gap-x-4 items-center justify-center"
       >
+        <input
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="OpenAI API Anahtarı"
+          className="w-[400px] bg-zinc-100 outline-none focus:bg-zinc-300 p-4 rounded-md text-[15px] font-medium"
+        />
         <textarea
           value={query}
           id="input-textarea"
           onChange={((e) => setQuery(e.target.value), handleTextAreaChange)}
-          placeholder={loading ? 'Özetleniyor...' : 'Metni buraya yazınız...'}
+          placeholder={loading ? "Özetleniyor..." : "Metni buraya yazınız..."}
           className="w-[400px] bg-zinc-100 outline-none focus:bg-zinc-300 p-4 rounded-md text-[15px] font-medium resize-none max-h-[225px] overflow-y-auto loading:cursor-pointer-events-none"
         />
         <button
           disabled={!query || loading}
           className="h-10 px-5 rounded-md bg-yellow-500 text-black font-bold hover:bg-yellow-400 disabled:bg-zinc-100 disabled:text-zinc-600 disabled:cursor-not-allowed"
         >
-          {loading ? 'ÖZETLENİYOR...' : 'ÖZETLE'}
+          {loading ? "ÖZETLENİYOR..." : "ÖZETLE"}
         </button>
         <button
           type="button"
@@ -118,5 +126,5 @@ export default function Home() {
         )}
       </div>
     </div>
-  )
+  );
 }
