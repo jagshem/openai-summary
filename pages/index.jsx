@@ -9,7 +9,7 @@ export default function Home() {
   const submitHandle = (e) => {
     e.preventDefault();
     setLoading(true);
-    fetch("/api/proxy", {
+    fetch("/api/generate-summuary", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, apiKey }),
